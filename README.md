@@ -74,4 +74,4 @@ To enable automation on Vercel, ensure your `vercel.json` is configured. Vercel 
 ---
 
 ## 📄 License
-MIT License. Created by Lucky Singh.
+MIT License. Created by LSC.
