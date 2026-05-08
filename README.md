@@ -1,6 +1,6 @@
 # LeadSniper 🎯
 
-**LeadSniper** is an autonomous, AI-powered lead generation and outreach machine. It hunts for high-ticket freelance opportunities across Upwork and Reddit, qualifies them using Google Gemini 1.5 Flash, and handles personalized outreach—all on autopilot.
+**LeadSniper** is an autonomous, AI-powered lead generation and outreach machine. It hunts for high-ticket freelance opportunities across Upwork and Reddit, qualifies them using Google Gemini 1.5 Flash for now, and handles personalized outreach—all on autopilot.
 
 ---
 
