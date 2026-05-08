@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server';
-import { Anthropic } from '@anthropic-ai/sdk';
-import { supabase } from '@/lib/supabase';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { getServiceSupabase } from '@/lib/supabase';
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
+const supabase = getServiceSupabase();
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const model = genAI.getGenerativeModel({ 
+  model: 'gemini-1.5-flash',
+  generationConfig: {
+    responseMimeType: "application/json",
+  }
 });
 
 const PROFILE = `
@@ -36,38 +42,38 @@ export async function GET() {
 
     for (const lead of leads) {
       try {
-        const response = await anthropic.messages.create({
-          model: 'claude-3-5-sonnet-20240620', // Using current available sonnet model
-          max_tokens: 1000,
-          system: `You are an AI lead filtering assistant. Evaluate if this job post or Reddit post is a good fit for the developer profile provided.
-          Return ONLY a valid JSON object with these keys: 
-          { 
-            "score": number (1-10), 
-            "reason": string, 
-            "pain_point": string, 
-            "fit": boolean, 
-            "subject_line": string, 
-            "message": string (80-100 words casual outreach) 
-          }`,
-          messages: [
-            {
-              role: 'user',
-              content: `
-Developer Profile:
-${PROFILE}
+        const prompt = `
+        You are an AI lead filtering assistant. Evaluate if this job post or Reddit post is a good fit for the developer profile provided.
+        
+        Developer Profile:
+        ${PROFILE}
+        
+        Lead Title: ${lead.title}
+        Lead Description: ${lead.description}
+        
+        Evaluate this lead. If the score is >= 7, generate a personalized subject line and casual outreach message.
+        
+        Return ONLY a valid JSON object with these keys: 
+        { 
+          "score": number (1-10), 
+          "reason": string, 
+          "pain_point": string, 
+          "fit": boolean, 
+          "subject_line": string, 
+          "message": string (80-100 words casual outreach) 
+        }`;
 
-Lead Title: ${lead.title}
-Lead Description: ${lead.description}
-
-Evaluate this lead. If the score is >= 7, generate a personalized subject line and casual outreach message.
-`
-            }
-          ],
-        });
-
-        // Parse JSON from Claude response
-        const content = response.content[0].type === 'text' ? response.content[0].text : '';
-        const result = JSON.parse(content);
+        const resultResponse = await model.generateContent(prompt);
+        const responseText = resultResponse.response.text();
+        
+        // Gemini with JSON mode should return clean JSON, but let's be safe
+        let result;
+        try {
+          result = JSON.parse(responseText.replace(/```json\n?|\n?```/g, '').trim());
+        } catch (e) {
+          console.error("Failed to parse Gemini response as JSON:", responseText);
+          continue;
+        }
 
         // Update lead in DB
         await supabase.from('leads').update({

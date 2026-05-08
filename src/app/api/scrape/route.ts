@@ -2,7 +2,9 @@ import { NextResponse } from 'next/server';
 import Parser from 'rss-parser';
 import axios from 'axios';
 import crypto from 'crypto';
-import { supabase } from '@/lib/supabase';
+import { getServiceSupabase } from '@/lib/supabase';
+
+const supabase = getServiceSupabase();
 
 const parser = new Parser();
 
