@@ -34,6 +34,8 @@
 
 ---
 
+https://drive.google.com/file/d/1PFn397sXh6W8qkSpSMKo3jYsuabbG2Ui/view?usp=sharing - flow chart here
+
 ## ⚙️ Setup Instructions
 
 ### 1. Database Setup
