@@ -33,6 +33,8 @@
 4.  **Dashboard**: Real-time monitoring of reply rates and meeting bookings.
 
 ---
+<img width="2800" height="5680" alt="lead_pipeline_svg_flowchart" src="https://github.com/user-attachments/assets/e7ac5fc7-4523-4ac9-8603-ca31f002760d" />
+
 
 https://drive.google.com/file/d/1PFn397sXh6W8qkSpSMKo3jYsuabbG2Ui/view?usp=sharing - flow chart here
 
